@@ -1,3 +1,12 @@
+const colors = {
+  primary: "#6fb7fe",
+  secondary: "#6fb7fe",
+  danger: "#ff4f57",
+  background: "#eff7ff",
+  title: "#537eaa",
+  active: "#d1e7fd",
+};
+
 const spacing = {
   xs: "0.75rem",
   sm: "1rem",
@@ -50,6 +59,7 @@ const fontFamily = {
 };
 
 module.exports = {
+  colors,
   spacing,
   borderRadius,
   borderWidth,
