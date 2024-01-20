@@ -10,8 +10,8 @@ function App() {
     <BrowserRouter>
       <GlobalProvider>
         <AuthProvider>
-          <PrivateRoutes />
           <PublicRoutes />
+          <PrivateRoutes />
         </AuthProvider>
       </GlobalProvider>
     </BrowserRouter>

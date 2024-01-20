@@ -59,7 +59,7 @@ export function SidebarMenu() {
           </NavLink>
         </div>
 
-        <ListItem onClick={logout}>Log Out</ListItem>
+        <ListItem onClick={() => logout()}>Log Out</ListItem>
       </List>
     </Card>
   );

@@ -30,14 +30,14 @@ export const TeamForm = () => {
     resolver: yupResolver(teamValidation),
   });
 
-  const handleSubmitTeam = async (data: UserModel) => {
-    const objectSave: UserModel = {
+  const handleSubmitTeam = async (data: TeamModel) => {
+    const objectSave: TeamModel = {
       ...data,
     };
     await TeamService.create(objectSave);
 
-    queryClient.invalidateQueries(["team-options"]);
     queryClient.invalidateQueries(["team-list"]);
+    queryClient.invalidateQueries(["team-options"]);
   };
 
   return (
