@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import { Simulation } from "../../features/Championship/pages/Simulation";
 import { TeamForm } from "../../features/Championship/pages/TeamForm";
 import { SidebarMenu } from "../../components/molecules/SidebarMenu";
@@ -10,9 +10,14 @@ import { useEffect, useState } from "react";
 export const PrivateRoutes = () => {
   const { userInfo } = useAuth();
   const [showMenu, setShowMenu] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    setShowMenu(isValidUUID(userInfo?.uuid));
+    if (isValidUUID(userInfo?.uuid)) {
+      setShowMenu(isValidUUID(userInfo?.uuid));
+    } else {
+      navigate("/login");
+    }
   }, [userInfo]);
 
   return (
