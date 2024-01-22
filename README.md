@@ -29,7 +29,7 @@ Antes de começar, certifique-se de ter os seguintes requisitos instalados:
 1. Clone o repositório:
 
    ```bash
-   git clone https://github.com/seu-usuario/meu-campeonato-frontend.git
+   git clone https://github.com/TheGabrielGalvao/MeuCampeonato.Frontend.git
 
 2. Abra o projeto no seu ambiente de desenvolvimento.
 
