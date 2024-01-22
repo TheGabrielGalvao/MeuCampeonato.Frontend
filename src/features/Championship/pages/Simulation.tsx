@@ -76,7 +76,7 @@ export const Simulation = () => {
         >
           Simulate
         </Button>
-        <AlertElement ref={alertRef} />
+        <AlertElement ref={alertRef} className="w-96" />
       </div>
       <div className="flex flex-col w-full">
         <Typography>Results</Typography>

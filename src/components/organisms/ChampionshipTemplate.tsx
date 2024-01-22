@@ -13,13 +13,8 @@ interface ChampionshipTemplateProps {
 export const ChampionshipTemplate = ({
   championship,
 }: ChampionshipTemplateProps) => {
-  var teste = championship.matches?.filter(
-    (x: MatchModel) =>
-      Number(x.championshipStage) === Number(EChampionshipStage.QuarterFinals)
-  );
-  console.log("ooo", championship);
   return (
-    <div className="flex w-full mt-md gap-xl">
+    <div className="flex w-full mt-md gap-xl justify-center items-center bg-background py-sm">
       <div className="flex flex-col gap-md items-start justify-center">
         <Typography variant="h6">Quarter Finals</Typography>
         {championship.matches
@@ -71,6 +66,7 @@ export const ChampionshipTemplate = ({
               awayTeamNormalTimeScore={match.awayTeamNormalTimeScore}
               homeTeamPenaltyScore={match.homeTeamPenaltyScore}
               awayTeamPenaltyScore={match.awayTeamPenaltyScore}
+              matchWinnerName={match.matchWinnerName}
             />
           ))}
       </div>

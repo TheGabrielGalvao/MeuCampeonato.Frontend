@@ -43,8 +43,8 @@ const DialogElement: React.ForwardRefRenderFunction<
   );
 
   return (
-    <Dialog open={open} size="xl">
-      <DialogHeader className="flex justify-between">
+    <Dialog open={open} size="xl" className="bg-background">
+      <DialogHeader className="flex justify-between items-center py-0 pr-0 border-b-2">
         {title}
         <Button
           variant="text"
@@ -55,7 +55,8 @@ const DialogElement: React.ForwardRefRenderFunction<
           <FaTimes size={32} />
         </Button>
       </DialogHeader>
-      <DialogBody>{children}</DialogBody>
+      <DialogBody className="p-0 mt-0">{children}</DialogBody>
+      <DialogFooter></DialogFooter>
     </Dialog>
   );
 };

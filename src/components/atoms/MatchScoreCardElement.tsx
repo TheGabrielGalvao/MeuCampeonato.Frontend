@@ -1,5 +1,6 @@
 import React from "react";
 import { Card, Typography } from "@material-tailwind/react";
+import { GiTrophyCup } from "react-icons/gi";
 
 interface MatchScoreCardProps {
   homeTeam: string;
@@ -8,6 +9,7 @@ interface MatchScoreCardProps {
   awayTeamNormalTimeScore: number;
   homeTeamPenaltyScore?: number;
   awayTeamPenaltyScore?: number;
+  matchWinnerName?: string;
 }
 
 export const MatchScoreCard: React.FC<MatchScoreCardProps> = ({
@@ -17,6 +19,7 @@ export const MatchScoreCard: React.FC<MatchScoreCardProps> = ({
   awayTeamNormalTimeScore,
   homeTeamPenaltyScore,
   awayTeamPenaltyScore,
+  matchWinnerName,
 }) => {
   return (
     <Card className="min-w-56">
@@ -32,8 +35,14 @@ export const MatchScoreCard: React.FC<MatchScoreCardProps> = ({
               </Typography>
             )}
           </div>
-          <Typography variant="paragraph" className="text-primary">
+          <Typography
+            variant="paragraph"
+            className="text-primary flex justify-center items-center gap-md"
+          >
             {homeTeam}
+            {homeTeam === matchWinnerName && (
+              <GiTrophyCup size={22} className="text-warning" />
+            )}
           </Typography>
         </div>
         <div className="flex justify-start items-start gap-md">
@@ -48,8 +57,11 @@ export const MatchScoreCard: React.FC<MatchScoreCardProps> = ({
             )}
           </div>
 
-          <Typography variant="paragraph" className="text-primary">
+          <Typography variant="paragraph" className="text-primary flex">
             {awayTeam}
+            {awayTeam === matchWinnerName && (
+              <GiTrophyCup size={22} className="text-warning" />
+            )}
           </Typography>
         </div>
       </div>
