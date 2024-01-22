@@ -15,6 +15,7 @@ export const PrivateRoutes = () => {
   useEffect(() => {
     if (isValidUUID(userInfo?.uuid)) {
       setShowMenu(isValidUUID(userInfo?.uuid));
+      navigate("/");
     } else {
       navigate("/login");
     }
