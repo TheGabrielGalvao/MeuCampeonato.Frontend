@@ -7,13 +7,12 @@ import { OptionItem } from "../../../types/OptionItem";
 import TeamService from "../../../services/TeamService";
 import { useQuery } from "react-query";
 import ChampionshipService from "../../../services/ChampionshipService";
-import { MatchScoreCard } from "../../../components/atoms/MatchScoreCardElement";
-import {
-  ChampionshipModel,
-  EChampionshipStage,
-  MatchModel,
-} from "../../../models/ChampionshipModel";
-import { filter } from "lodash";
+import { ChampionshipModel } from "../../../models/ChampionshipModel";
+import AlertElement, {
+  AlertElementRef,
+} from "../../../components/atoms/AlertElement";
+import { ChampionshipTemplate } from "../../../components/organisms/ChampionshipTemplate";
+import { useAuth } from "../../../context/AuthContext";
 
 export const Simulation = () => {
   const { data: teams } = useQuery(["team-options"], TeamService.getOptions, {
@@ -24,15 +23,29 @@ export const Simulation = () => {
 
   const multiselectRef = useRef<MultiselectRef>(null);
   const [championship, setChampionship] = useState<ChampionshipModel>();
+  const { userInfo } = useAuth();
+  const alertRef = useRef<AlertElementRef>(null);
 
   const handleButtonClick = async () => {
+    alertRef.current?.hideMessage();
     const selectedItems = multiselectRef.current?.getSelectedItems();
-    await ChampionshipService.create({
-      teams: selectedItems as string[],
-      userUuid: "D4DF3501-C3BD-4346-B349-6C14E4E6C645",
-    }).then((response) => {
-      setChampionship(response);
-    });
+    if (selectedItems?.length === 8 && userInfo?.uuid) {
+      await ChampionshipService.create({
+        teams: selectedItems as string[],
+        userUuid: userInfo?.uuid!,
+      }).then((response) => {
+        alertRef.current?.showMessage({
+          message: "Simulation generated successfully!",
+          type: "success",
+        });
+        setChampionship(response);
+      });
+    } else {
+      alertRef.current?.showMessage({
+        message: "You must select 8 teams!",
+        type: "danger",
+      });
+    }
   };
 
   return (
@@ -54,95 +67,21 @@ export const Simulation = () => {
           options={(teams ?? []) as OptionItem[]}
           ref={multiselectRef}
           label="Select Teams"
-          className="flex1"
+          className="py-sm"
         />
         <Button
           type="button"
-          className="bg-primary text-white"
+          className="bg-primary text-white py-sm"
           onClick={handleButtonClick}
         >
           Simulate
         </Button>
+        <AlertElement ref={alertRef} />
       </div>
-      {championship && (
-        <div className="flex flex-col w-full">
-          <Typography>Results</Typography>
-          <div className="flex w-full mt-md gap-5xl">
-            <div className="flex flex-col gap-md items-center justify-center">
-              <Typography>Quarter Finals</Typography>
-              {championship.matches
-                ?.filter(
-                  (x: MatchModel) =>
-                    x.championshipStage === EChampionshipStage.QuarterFinals
-                )
-                .map((match) => (
-                  <MatchScoreCard
-                    homeTeam={match.homeTeamName}
-                    awayTeam={match.awayTeamName}
-                    homeTeamNormalTimeScore={match.homeTeamNormalTimeScore}
-                    awayTeamNormalTimeScore={match.awayTeamNormalTimeScore}
-                    homeTeamPenaltyScore={match.homeTeamPenaltyScore}
-                    awayTeamPenaltyScore={match.awayTeamPenaltyScore}
-                  />
-                ))}
-            </div>
-            <div className="flex flex-col gap-md items-center justify-center">
-              <Typography>Quarter Finals</Typography>
-              {championship.matches
-                ?.filter(
-                  (x: MatchModel) =>
-                    x.championshipStage === EChampionshipStage.SemiFinals
-                )
-                .map((match) => (
-                  <MatchScoreCard
-                    homeTeam={match.homeTeamName}
-                    awayTeam={match.awayTeamName}
-                    homeTeamNormalTimeScore={match.homeTeamNormalTimeScore}
-                    awayTeamNormalTimeScore={match.awayTeamNormalTimeScore}
-                    homeTeamPenaltyScore={match.homeTeamPenaltyScore}
-                    awayTeamPenaltyScore={match.awayTeamPenaltyScore}
-                  />
-                ))}
-            </div>
-            <div className="flex flex-col gap-md items-center justify-center">
-              <Typography>Final</Typography>
-              {championship.matches
-                ?.filter(
-                  (x: MatchModel) =>
-                    x.championshipStage === EChampionshipStage.Final
-                )
-                .map((match) => (
-                  <MatchScoreCard
-                    homeTeam={match.homeTeamName}
-                    awayTeam={match.awayTeamName}
-                    homeTeamNormalTimeScore={match.homeTeamNormalTimeScore}
-                    awayTeamNormalTimeScore={match.awayTeamNormalTimeScore}
-                    homeTeamPenaltyScore={match.homeTeamPenaltyScore}
-                    awayTeamPenaltyScore={match.awayTeamPenaltyScore}
-                  />
-                ))}
-            </div>
-            <div className="flex flex-col gap-md items-center justify-center">
-              <Typography>Third Place Playoff</Typography>
-              {championship.matches
-                ?.filter(
-                  (x: MatchModel) =>
-                    x.championshipStage === EChampionshipStage.ThirdPlacePlayoff
-                )
-                .map((match) => (
-                  <MatchScoreCard
-                    homeTeam={match.homeTeamName}
-                    awayTeam={match.awayTeamName}
-                    homeTeamNormalTimeScore={match.homeTeamNormalTimeScore}
-                    awayTeamNormalTimeScore={match.awayTeamNormalTimeScore}
-                    homeTeamPenaltyScore={match.homeTeamPenaltyScore}
-                    awayTeamPenaltyScore={match.awayTeamPenaltyScore}
-                  />
-                ))}
-            </div>
-          </div>
-        </div>
-      )}
+      <div className="flex flex-col w-full">
+        <Typography>Results</Typography>
+        {championship && <ChampionshipTemplate championship={championship} />}
+      </div>
     </div>
   );
 };

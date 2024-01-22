@@ -1,5 +1,11 @@
 export interface UserModel {
   uuid?: string;
-  username: string;
+  userName: string;
   userPass: string;
+}
+
+export interface UserModelForm {
+  userName: string;
+  userPass: string;
+  confirmPass: string;
 }

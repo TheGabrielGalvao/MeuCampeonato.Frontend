@@ -19,26 +19,38 @@ export const MatchScoreCard: React.FC<MatchScoreCardProps> = ({
   awayTeamPenaltyScore,
 }) => {
   return (
-    <Card className="min-w-60">
-      <div className="p-4 flex flex-col gap-sm">
-        <div className="flex justify-between items-center">
-          <Typography variant="h6" className="text-primary">
+    <Card className="min-w-56">
+      <div className="p-4 flex flex-col gap-sm items-start">
+        <div className="flex justify-start items-start gap-md">
+          <div className="flex items-center justify-center gap-sm">
+            <Typography variant="paragraph">
+              {homeTeamNormalTimeScore}
+            </Typography>
+            {homeTeamNormalTimeScore === awayTeamNormalTimeScore && (
+              <Typography variant="paragraph">
+                {homeTeamPenaltyScore} (P)
+              </Typography>
+            )}
+          </div>
+          <Typography variant="paragraph" className="text-primary">
             {homeTeam}
           </Typography>
-          <Typography variant="h6">{homeTeamNormalTimeScore}</Typography>
-          {homeTeamPenaltyScore !== undefined && homeTeamPenaltyScore > 0 && (
-            <Typography variant="h6">{homeTeamPenaltyScore} (P)</Typography>
-          )}
         </div>
-        <hr />
-        <div className="flex justify-between items-center">
-          <Typography variant="h6" className="text-primary">
+        <div className="flex justify-start items-start gap-md">
+          <div className="flex items-center justify-center gap-sm">
+            <Typography variant="paragraph">
+              {awayTeamNormalTimeScore}
+            </Typography>
+            {homeTeamNormalTimeScore === awayTeamNormalTimeScore && (
+              <Typography variant="paragraph">
+                {awayTeamPenaltyScore} (P)
+              </Typography>
+            )}
+          </div>
+
+          <Typography variant="paragraph" className="text-primary">
             {awayTeam}
           </Typography>
-          <Typography variant="h6">{awayTeamNormalTimeScore}</Typography>
-          {awayTeamPenaltyScore !== undefined && awayTeamPenaltyScore > 0 && (
-            <Typography variant="h6">{awayTeamPenaltyScore} (P)</Typography>
-          )}
         </div>
       </div>
     </Card>

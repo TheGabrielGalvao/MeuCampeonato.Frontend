@@ -4,6 +4,9 @@ import { useGlobal } from "../GlobalContext";
 import axios from "axios";
 import { AuthModel } from "../../models/AuthModel";
 import AuthService from "../../services/AuthService";
+import { useQuery } from "react-query";
+import UserService from "../../services/UserService";
+import { UserModel } from "../../models/UserModel";
 
 export const AuthContext = createContext<IAuthContextData>(
   {} as IAuthContextData
@@ -11,9 +14,27 @@ export const AuthContext = createContext<IAuthContextData>(
 
 export const AuthProvider = ({ children }: IAuthProviderProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userInfo, setUserInfo] = useState<UserModel | undefined>();
   const { navigate } = useGlobal();
   const [token, setToken] = useState<string | null>(
     localStorage.getItem("token")
+  );
+
+  const handleSetUserInfo = (data: UserModel) => {
+    setUserInfo(data);
+  };
+
+  const { data: info } = useQuery(
+    "user-info",
+    () => UserService.getFullUserInfo(),
+    {
+      retry: false,
+      enabled: token !== null && token !== undefined && token !== "",
+      refetchOnWindowFocus: false,
+      onSuccess: (info) => {
+        handleSetUserInfo(info);
+      },
+    }
   );
 
   useEffect(() => {
@@ -24,7 +45,7 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
     }
   }, [isAuthenticated]);
 
-  const login = async (data: AuthModel) => {
+  const login = async (data: AuthModel): Promise<boolean> => {
     try {
       const result = await AuthService.login(data);
 
@@ -34,6 +55,7 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
       axios.defaults.headers.common["Authorization"] = `Bearer ${result.token}`;
 
       navigate("/");
+      return true;
     } catch (error) {
       setIsAuthenticated(false);
       setToken(null);
@@ -41,11 +63,13 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
       localStorage.removeItem("token");
       delete axios.defaults.headers.common["Authorization"];
       console.error("Erro durante o login:", error);
+      return false;
     }
   };
 
   const logout = () => {
     setIsAuthenticated(false);
+    setUserInfo(undefined);
     setToken(null);
     navigate("/login");
     localStorage.removeItem("token");
@@ -57,6 +81,8 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
     login,
     logout,
     token,
+    userInfo,
+    handleSetUserInfo,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

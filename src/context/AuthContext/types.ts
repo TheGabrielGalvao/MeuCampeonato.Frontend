@@ -1,10 +1,13 @@
 import { ReactNode } from "react";
 import { AuthModel } from "../../models/AuthModel";
+import { UserModel } from "../../models/UserModel";
 
 export interface IAuthContextData {
   isAuthenticated: boolean;
-  login: (data: AuthModel) => void;
+  userInfo?: UserModel;
+  login: (data: AuthModel) => Promise<boolean>;
   logout: () => void;
+  handleSetUserInfo: (data: UserModel) => void;
   token: string | null;
 }
 

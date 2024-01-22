@@ -15,7 +15,6 @@ export default new (class AuthService extends BaseService<AuthModel> {
       `${this.getUrl()}/login`,
       data
     );
-    console.log("resposata", response);
     return response.data;
   }
 
